@@ -2,8 +2,7 @@ import React from "react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
-      <nav className="bg-red-500 text-white">This is auth navbar</nav>
+    <div className="h-full flex items-center justify-center bg-gradient-to-b from-sky-400  to-blue-800">
       {children}
     </div>
   );
