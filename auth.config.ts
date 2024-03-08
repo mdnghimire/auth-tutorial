@@ -29,12 +29,12 @@ export default {
 
           const user = await getUsersByEmail(email);
           if (!user || !user.password) {
-            return;
+            return null;
           }
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (passwordMatch) return user;
         }
-        return;
+        return null;
       },
     }),
   ],
