@@ -58,11 +58,15 @@ export const {
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
       }
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
       console.log({ sessionToken: token, session });
 
       return session;
     },
     async jwt({ token, account }) {
+      console.log("check token here", token);
       // Persist the OAuth access_token to the token right after signin
       if (!token.sub) return token;
       const existingUser = await getUsersById(token.sub);
@@ -72,7 +76,7 @@ export const {
       if (account) {
         token.accessToken = account.access_token;
       }
-      token.customField = "test";
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       return token;
     },
   },

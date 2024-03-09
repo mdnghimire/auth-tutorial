@@ -1,39 +1,16 @@
-import { auth, signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
-const SettingsPage = async () => {
-  const session = await auth();
+"use client";
+import { logout } from "@/actions/logout";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSession } from "next-auth/react";
+const SettingsPage = () => {
+  const session = useSession();
+  const user = useCurrentUser();
 
-  // const existingUser = await db.user.findUnique({
-  //   where: {
-  //     id: session?.user.id,
-  //   },
-  // });
+  const onClick = () => {
+    logout();
+  };
 
-  // if (existingUser) {
-  //   await db.user.update({
-  //     data: {
-  //       emailVerified: true,
-  //     },
-  //   });
-  // }
-
-  return (
-    <div className="ml-5">
-      Settings page
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <form
-        action={async () => {
-          "use server";
-
-          await signOut();
-        }}
-      >
-        <Button className="ml-2" type="submit">
-          Sign out
-        </Button>
-      </form>
-    </div>
-  );
+  return <div>settings page</div>;
 };
 
 export default SettingsPage;
