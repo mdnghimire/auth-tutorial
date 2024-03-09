@@ -6,10 +6,30 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserRole } from "@prisma/client";
 
+import { admin } from "@/actions/admin";
 import { useToast } from "@/components/ui/use-toast";
 
 const AdminPage = () => {
   const { toast } = useToast();
+
+  const onServerActionClick = () => {
+    admin().then((data) => {
+      if (data.error) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: data.error,
+        });
+      }
+      if (data.success) {
+        toast({
+          variant: "default",
+          description: data.success,
+        });
+      }
+    });
+  };
+
   const onApiRouteClick = () => {
     fetch("/api/admin").then((response) => {
       if (response.ok) {
@@ -40,7 +60,7 @@ const AdminPage = () => {
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
           <p className="text-sm font-medium">Admin-only Server Action</p>
-          <Button>Click to test</Button>
+          <Button onClick={onServerActionClick}>Click to test</Button>
         </div>
       </CardContent>
     </Card>
