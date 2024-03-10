@@ -1,7 +1,8 @@
 import authConfig from "@/auth.config";
+import { getAccountByUserId } from "@/lib/account";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/lib/two-factor-confirmation";
-import { getUsersById } from "@/lib/user";
+import { getUserById } from "@/lib/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { UserRole } from "@prisma/client";
 import NextAuth from "next-auth";
@@ -30,11 +31,10 @@ export const {
 
   callbacks: {
     async signIn({ user, account }) {
-      console.log("check user account", user, account);
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
-      const existingUser = await getUsersById(user?.id || "");
+      const existingUser = await getUserById(user?.id || "");
       // prevent sign in without email verification
       if (!existingUser?.emailVerified) return false;
 
@@ -58,19 +58,30 @@ export const {
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
       }
+
       if (session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
       }
-      console.log({ sessionToken: token, session });
+
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
+      }
 
       return session;
     },
     async jwt({ token, account }) {
-      console.log("check token here", token);
-      // Persist the OAuth access_token to the token right after signin
       if (!token.sub) return token;
-      const existingUser = await getUsersById(token.sub);
+      const existingUser = await getUserById(token.sub);
+
       if (!existingUser) return token;
+
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingAccount;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
       console.log({ token });
       if (account) {

@@ -13,7 +13,10 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginProps, LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
 
-export const login = async (values: LoginProps) => {
+export const login = async (
+  values: LoginProps,
+  callbackUrl?: string | null
+) => {
   const validatedFields = LoginSchema.safeParse(values);
   if (!validatedFields.success) return { error: "Invalid credentials" };
   const { email, password, code } = validatedFields.data;
@@ -80,7 +83,7 @@ export const login = async (values: LoginProps) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {
