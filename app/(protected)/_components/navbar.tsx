@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@/components/auth/user-button";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { getInitials } from "@/utils/main";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -40,7 +41,9 @@ export const Navbar = () => {
           </Button>
         )}
       </div>
-      <div className="flex justify-end ml-auto font-bold">{user?.name} </div>
+      <div className="flex justify-end ml-auto font-bold">
+        {getInitials(user?.name || "")}
+      </div>
 
       <UserButton />
     </nav>
