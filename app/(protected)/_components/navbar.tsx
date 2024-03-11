@@ -15,7 +15,7 @@ export const Navbar = () => {
   console.log("check user", user?.role);
 
   return (
-    <nav className=" bg-secondary flex justify-between items-center p-4 w-full shadow-sm">
+    <nav className=" bg-secondary flex justify-between items-center p-4 w-full shadow-sm fixed h-50 top-0 z-10">
       <div className="flex gap-x-2">
         <Button
           asChild
@@ -41,11 +41,10 @@ export const Navbar = () => {
           </Button>
         )}
       </div>
-      <div className="flex justify-end ml-auto font-bold">
-        {getInitials(user?.name || "")}
+      <div className="flex items-center space-x-2">
+        <div className="font-bold">{getInitials(user?.name || "")}</div>
+        <UserButton />
       </div>
-
-      <UserButton />
     </nav>
   );
 };
