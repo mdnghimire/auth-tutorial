@@ -18,6 +18,8 @@ export const login = async (
   callbackUrl?: string | null
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
+  console.log("check errors", validatedFields);
+
   if (!validatedFields.success) return { error: "Invalid credentials" };
   const { email, password, code } = validatedFields.data;
 
@@ -89,11 +91,11 @@ export const login = async (
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { msg: "Invalid credentials", status: "error" };
+          return { error: "Invalid credentials", status: "error" };
         case "CredentialsSignin":
           throw error;
         default:
-          return { msg: "Something went wrong", status: "error" };
+          return { error: "Something went wrong", status: "error" };
       }
     }
     throw error;
