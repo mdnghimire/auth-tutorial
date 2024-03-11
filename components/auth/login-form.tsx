@@ -10,7 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 
 import { LoginProps, LoginSchema } from "@/schemas";
@@ -23,8 +22,8 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
 import { login } from "@/actions/login";
+import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
-import * as z from "zod";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -49,50 +48,36 @@ export const LoginForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log("check values here", values);
-    try {
-      setError("");
-      setSuccess("");
+  const onSubmit = (values: LoginProps) => {
+    setError("");
+    setSuccess("");
 
-      startTransition(() => {
-        login(values, callbackUrl)
-          .then((data: any) => {
-            if (data?.error) {
-              form.reset();
-              setError(data.error);
-            }
+    startTransition(() => {
+      login(values, callbackUrl)
+        .then((data) => {
+          if (data?.error) {
+            // form.reset();
+            setError(data.error);
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: data.error,
+              action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+          }
 
-            if (data.success) {
-              form.reset();
-              setSuccess(data.success);
-            }
-            if (data.twoFactor) {
-              setShowTwoFactor(true);
-            }
+          if (data?.success) {
+            setSuccess(data.success);
+            form.reset();
+            toast({ description: "User successfully logged in" });
+          }
 
-            if (data?.success) {
-              setSuccess(data?.success);
-              form.reset();
-              toast({ description: "User successfully logged in" });
-            } else {
-              if (data?.errors) {
-                toast({
-                  variant: "destructive",
-                  title: "Uh oh! Something went wrong.",
-                  description: error,
-                  action: (
-                    <ToastAction altText="Try again">Try again</ToastAction>
-                  ),
-                });
-              }
-            }
-          })
-          .catch(() => setError("Something went wrong"));
-      });
-    } catch (error) {
-      console.log(error);
-    }
+          if (data?.twoFactor) {
+            setShowTwoFactor(true);
+          }
+        })
+        .catch(() => setError("Something went wrong"));
+    });
   };
 
   return (

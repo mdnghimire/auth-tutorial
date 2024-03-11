@@ -25,7 +25,6 @@ export default {
       clientSecret: process.env.OKTA_CLIENT_SECRET,
       issuer: process.env.OKTA_ISSUER,
       profile(profile) {
-        // console.log("check profile", profile);
         return {
           // Return all the profile information you need.
           // The only truly required field is `id`
