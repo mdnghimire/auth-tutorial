@@ -55,13 +55,19 @@ export const ResetSchema = z.object({
 });
 
 export const LoginSchema = z.object({
-  email: z.string().email({ message: "Email is required" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email" }),
   password: z.string().min(1, { message: "Password is required" }),
   code: z.string().optional(),
 });
 
 export const RegisterSchema = z.object({
-  email: z.string().email({ message: "Email is required" }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .email({ message: "Invalid email" }),
   password: z
     .string()
     .min(6, { message: "Minimum of 6 characters is required" }),
