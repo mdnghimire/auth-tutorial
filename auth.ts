@@ -31,6 +31,7 @@ export const {
 
   callbacks: {
     async signIn({ user, account }) {
+      // console.log("check provider here", user, account);
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
@@ -51,7 +52,8 @@ export const {
       }
       return true;
     },
-    async session({ session, user, token }) {
+    async session({ session, user, token }: any) {
+      // console.log("check token here", token);
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -67,6 +69,48 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+      }
+
+      // for okta provider session
+      if (token && token.accessToken) {
+        // console.log('check token here', token.accessToken);
+        try {
+          const response = await fetch(
+            "https://dev-09426885.okta.com/oauth2/default/v1/userinfo",
+            {
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const userData = await response.json();
+            session.user = {
+              id: userData.sub,
+              name: userData.name,
+              locale: userData.locale,
+              nickname: userData.nickname,
+              preferred_username: userData?.preferred_username,
+              given_name: userData.given_name,
+              middle_name: userData.middle_name,
+              family_name: userData.family_name,
+              email: userData.email,
+              zoneinfo: userData.zoneinfo,
+              email_verified: userData.email_verified,
+            };
+            console.log("check user data ", userData, token);
+          } else {
+            console.error(
+              "Error fetching user information:",
+              response.statusText
+            );
+            // Handle error as needed
+          }
+        } catch (error) {
+          console.error("Error fetching user information:", error);
+          // Handle error as needed
+        }
       }
 
       return session;
