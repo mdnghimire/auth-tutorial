@@ -20,6 +20,7 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
 import { register } from "@/actions/register";
+import { ToastAction } from "@/components/ui/toast";
 import * as z from "zod";
 
 export const RegisterForm = () => {
@@ -45,10 +46,19 @@ export const RegisterForm = () => {
 
       startTransition(() => {
         register(values).then((data) => {
-          setError(data.error);
-          setSuccess(data.success);
+          if (data?.error) {
+            // form.reset();
+            setError(data.error);
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: data.error,
+              action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+          }
 
           if (data.success) {
+            setSuccess(data.success);
             form.reset();
             toast({
               description: "User successfully registered",
