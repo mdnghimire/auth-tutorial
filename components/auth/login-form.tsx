@@ -26,6 +26,8 @@ import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
 
 export const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -141,9 +143,18 @@ export const LoginForm = () => {
                           {...field}
                           disabled={isPending}
                           placeholder="********"
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                         />
                       </FormControl>
+                      <Button
+                        size="sm"
+                        variant="link"
+                        asChild
+                        className="px-0 font-normal"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {!showPassword ? "Hide password" : "Show password"}
+                      </Button>
                       <Button
                         size="sm"
                         variant="link"
