@@ -40,6 +40,15 @@ export const Navbar = () => {
             <Link href="/settings">Settings</Link>
           </Button>
         )}
+
+        {user?.role === "ADMIN" && (
+          <Button
+            asChild
+            variant={pathname === "/dashboard" ? "default" : "outline"}
+          >
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <div className="font-bold">{getInitials(user?.name || "")}</div>
