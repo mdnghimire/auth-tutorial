@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import { Sidebar } from "@/components/sidebar";
 import React from "react";
 
 interface DashboardLayoutProps {
@@ -9,7 +10,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div>
       <Header />
-      {children}
+      <Sidebar>{children}</Sidebar>
     </div>
   );
 };
