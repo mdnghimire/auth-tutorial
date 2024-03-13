@@ -8,9 +8,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { getInitials } from "@/utils/main";
+
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
+  const user = useCurrentUser();
+  console.log("check user here", user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -22,7 +27,7 @@ const Header: React.FC<HeaderProps> = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-6 shadow-md">
+    <header className="fixed top-0 left-0 right-0 flex justify-between h-90 items-center p-6 shadow-md bg-white z-50">
       <Link href="#" passHref className="flex items-center">
         <Image
           alt="Logo"
@@ -64,6 +69,8 @@ const Header: React.FC<HeaderProps> = () => {
             <Button variant="custom">Back to settings</Button>
           </Link>
         </nav>
+        <div className="font-bold">{getInitials(user?.name || "")}</div>
+
         <Button variant="outline" onClick={onClick}>
           <ExitIcon className="mr-2 h-4 w-4" /> Logout
         </Button>
@@ -82,14 +89,23 @@ const Header: React.FC<HeaderProps> = () => {
       </div>
 
       <nav className="hidden lg:flex space-x-4">
-        <Button variant="ghost">Home</Button>
+        {/* <Button variant="ghost">Home</Button>
         <Button variant="ghost">About</Button>
         <Button variant="ghost">Services</Button>
-        <Button variant="ghost">Contact</Button>
-        <Link href="/settings" className="font-bold no-underline">
+        <Button variant="ghost">Contact</Button> */}
+        <Link
+          href="/settings"
+          className="font-bold no-underline hover:no-underline"
+        >
           <Button variant="custom">Back to settings</Button>
         </Link>
-
+        <Button
+          variant="link"
+          // style={{ textDecoration: "none" }}
+          className="font-bold no-underline"
+        >
+          {getInitials(user?.name || "")}
+        </Button>
         <Button variant="outline" onClick={onClick}>
           <ExitIcon className="mr-2 h-4 w-4" /> Logout
         </Button>
