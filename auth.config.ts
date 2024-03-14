@@ -34,7 +34,7 @@ export default {
     }),
 
     Credentials({
-      async authorize(credentials): Promise<any> {
+      async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {

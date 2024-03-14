@@ -18,7 +18,7 @@ export const login = async (
   callbackUrl?: string | null
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
-  console.log("check errors", validatedFields);
+  // console.log("check errors", validatedFields);
 
   if (!validatedFields.success) return { error: "Invalid credentials" };
   const { email, password, code } = validatedFields.data;

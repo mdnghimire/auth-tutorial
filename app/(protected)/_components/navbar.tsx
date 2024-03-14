@@ -12,7 +12,7 @@ export const Navbar = () => {
   const pathname = usePathname();
   const user = useCurrentUser();
 
-  console.log("check user", user?.role);
+  // console.log("check user", user?.role);
 
   return (
     <nav className=" bg-secondary flex justify-between items-center p-4 w-full shadow-sm fixed h-50 top-0 z-10">
