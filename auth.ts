@@ -127,7 +127,7 @@ export const {
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
-      console.log({ token });
+      // console.log({ token });
       if (account) {
         token.accessToken = account.access_token;
       }

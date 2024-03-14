@@ -15,7 +15,7 @@ interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
   const user = useCurrentUser();
-  console.log("check user here", user);
+  // console.log("check user here", user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
